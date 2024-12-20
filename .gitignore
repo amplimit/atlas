@@ -5,5 +5,5 @@ checkpoints-small
 data_short/
 evaluation_result/
 runs/
-test_report/
+test_reports/
 CNN_best_model.pth
