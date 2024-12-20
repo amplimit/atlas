@@ -1,1 +1,9 @@
 data/
+checkpoints/
+checkpoints-large/
+checkpoints-small
+data_short/
+evaluation_result/
+runs/
+test_report/
+CNN_best_model.pth

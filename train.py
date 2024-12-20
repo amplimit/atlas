@@ -82,7 +82,9 @@ class WarmupScheduler(torch.optim.lr_scheduler._LRScheduler):
                 for base_lr in self.base_lrs]
 
 class EnhancedCombinedLoss(nn.Module):
-    def __init__(self, alpha=0.5, beta=0.2, gamma=0.1, delta=0.1, epsilon=0.1):
+    # def __init__(self, alpha=0.2, beta=0.4, gamma=0.1, delta=0.2, epsilon=0.1):
+    # def __init__(self, alpha=0.1, beta=0.7, gamma=0.05, delta=0.1, epsilon=0.05):
+    def __init__(self, alpha=0.05, beta=0.9, gamma=0, delta=0.05, epsilon=0):
         super().__init__()
         self.alpha = alpha   # MSE权重
         self.beta = beta     # 方向预测权重
@@ -107,6 +109,8 @@ class EnhancedCombinedLoss(nn.Module):
         
         # 连续性损失
         smoothness_loss = torch.mean(torch.abs(final_predictions - prev_price.unsqueeze(-1)))
+        if smoothness_loss > 0.5:  # 当平滑度超过阈值时增加惩罚
+            smoothness_loss *= 1.5
         
         # TMDO特征正则化
         tmdo_reg = torch.mean(torch.abs(tmdo_features))

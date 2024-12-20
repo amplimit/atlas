@@ -6,7 +6,7 @@ from torch.utils.tensorboard import SummaryWriter
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-from data import load_data_from_csv
+from data import load_data_from_csv, download_and_prepare_data
 
 def combine_stock_data(symbols, start_date, end_date):
     """
@@ -24,7 +24,8 @@ def combine_stock_data(symbols, start_date, end_date):
     
     for symbol in tqdm(symbols):
         # 获取单个股票数据
-        data = load_data_from_csv(f"./data/{symbol}.csv")
+        # data = download_and_prepare_data(symbol, start_date, end_date)
+        data = load_data_from_csv(f"./data_short/{symbol}.csv")
 
         if not data.empty:
             # 将数据添加到列表中
@@ -586,7 +587,7 @@ def train_model(model, train_loader, val_loader, num_epochs=50, device='cuda'):
         # 早停检查
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            torch.save(model.state_dict(), 'best_model.pth')
+            torch.save(model.state_dict(), 'CNN_best_model.pth')
             patience_counter = 0
         else:
             patience_counter += 1
@@ -602,8 +603,14 @@ def train_model(model, train_loader, val_loader, num_epochs=50, device='cuda'):
 
 def main():
     # 加载数据
-    symbols = ['AAPL', 'GOOGL', 'MSFT', "NVDA", "AMD", "AMZN", "TSLA"]
-    data = combine_stock_data(symbols, '2010-01-01', '2024-01-01')
+    symbols = [
+        "AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA", "TSLA", "AMD", #"INTC", "CRM", 
+        "^GSPC", "^NDX", "^DJI", "^IXIC",
+        # "UNH", "ABBV","LLY",
+        # "FANG", "DLR", "PSA", "BABA", "JD", "BIDU",
+        # "QQQ"
+    ]
+    data = combine_stock_data(symbols, '2020-01-01', '2024-01-01')
 
     # 创建数据集
     dataset = EnhancedStockDataset(data)
@@ -612,8 +619,8 @@ def main():
     train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
 
     # 创建数据加载器
-    train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=128, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=3, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=3, shuffle=False)
 
     # 创建模型
     # model = AdaptiveFinancialCNN(input_dim=len(dataset.feature_order))
