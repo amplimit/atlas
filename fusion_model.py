@@ -1428,7 +1428,7 @@ def main():
     num_event_types = 10  # 事件类型数量
     
     # 数据准备
-    symbols_200 = [# 科技股
+    symbols = [# 科技股
     "AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA", "TSLA", "AMD", "INTC", "CRM", 
     "ADBE", "NFLX", "CSCO", "ORCL", "QCOM", "IBM", "AMAT", "MU", "NOW", "SNOW",
     
@@ -1442,7 +1442,7 @@ def main():
     
     # 消费品
     "PG", "KO", "PEP", "WMT", "HD", "MCD", "NKE", "SBUX", "TGT", "LOW",
-    "COST", "DIS", "CMCSA", "VZ", "T", "CL", "EL", "KMB", "GIS", "K", "PDD", "GOTU",
+    "COST", "DIS", "CMCSA", "VZ", "T", "CL", "EL", "KMB", "GIS", "K",
     
     # 工业
     "BA", "GE", "MMM", "CAT", "HON", "UPS", "LMT", "RTX", "DE", "EMR",
@@ -1472,11 +1472,15 @@ def main():
     "^IXIC", "^HSI", "000001.SS", "^GDAXI", "^FTSE",
     ]
     symbols = [
-        "AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA", "TSLA", "AMD", "INTC", "CRM", 
+        "AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA", "TSLA", "AMD", "INTC", "SNOW", 
         "^GSPC", "^NDX", "^DJI", "^IXIC",
+        "JPM", "V", "MS", "GS", "AXP",
+        "BA", "HON", "UPS", "GE",
+        "SBUX", "NKE", "COST",
         "UNH", "ABBV", "LLY",
-        "FANG", "DLR", "PSA", "BABA", "JD", "BIDU",
-        "QQQ"
+        "CVX", "XOM", "FANG",
+        "DLR", "BABA", "JD",
+        "QQQ", "SPY", "HYG", "SPY", "VNQ",
     ]
     data = combine_stock_data(symbols, '2020-01-01', '2024-01-01')
     events = generate_event_data(data)
@@ -1545,7 +1549,7 @@ def main():
         model=cnn_model,
         train_loader=train_loader_CNN,
         val_loader=val_loader_CNN,
-        n_epochs=40,
+        n_epochs=60,
         device=device,
         learning_rate=0.0001,
         checkpoint_dir='checkpoints/cnn'
@@ -1564,7 +1568,7 @@ def main():
         model=lstm_model,
         train_loader=train_loader_lstm,
         val_loader=val_loader_lstm,
-        n_epochs=40,
+        n_epochs=25,
         device=device,
         learning_rate=0.0001,
         checkpoint_dir='checkpoints/lstm'
